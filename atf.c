@@ -41,8 +41,6 @@ bool check_constraint(int* values, int num_values, constraint_t constraint) {
 bool process_value(int* values, int num_parameters, int parameter_number, int current_value, constraint_t constraint) {
 	values[parameter_number] = current_value;
 	
-	//printf("%d - %d\n", parameter_number, current_value);
-	
 	if (!check_constraint(values, parameter_number + 1, constraint))
 		return true;
 	
@@ -60,7 +58,6 @@ void generate_search_space(tp_t* parameters, int num_parameters,
 	int* values = (int *) malloc(num_parameters * sizeof(int));
 
 	for (int i = parameters[0].min; i <= parameters[0].max; i++) {
-
 		if (process_value(values, num_parameters, 0, i, parameters[0].constraint))
 			continue;
 		
@@ -72,7 +69,39 @@ void generate_search_space(tp_t* parameters, int num_parameters,
 				if (process_value(values, num_parameters, 2, k, parameters[2].constraint))
 					continue;
 		
+				for (int l = parameters[3].min; l <= parameters[3].max; l++) {
+					if (process_value(values, num_parameters, 3, l, parameters[3].constraint))
+						continue;
 		
+					for (int m = parameters[4].min; m <= parameters[4].max; m++) {
+						if (process_value(values, num_parameters, 4, m, parameters[4].constraint))
+							continue;
+		
+						for (int n = parameters[5].min; n <= parameters[5].max; n++) {
+							if (process_value(values, num_parameters, 5, n, parameters[5].constraint))
+								continue;
+		
+							for (int o = parameters[6].min; o <= parameters[6].max; o++) {
+								if (process_value(values, num_parameters, 6, o, parameters[6].constraint))
+									continue;
+		
+								for (int p = parameters[7].min; p <= parameters[7].max; p++) {
+									if (process_value(values, num_parameters, 7, p, parameters[7].constraint))
+										continue;
+		
+									for (int q = parameters[8].min; q <= parameters[8].max; q++) {
+										if (process_value(values, num_parameters, 8, q, parameters[8].constraint))
+											continue;
+		
+										for (int r = parameters[9].min; r <= parameters[9].max; r++) {
+											process_value(values, num_parameters, 9, r, parameters[9].constraint);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
