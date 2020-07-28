@@ -45,7 +45,7 @@ configuration_t* create_config(tp_t* parameters, int* values, int num_parameters
 	int* config_values = (int *) malloc(num_parameters * sizeof(int));
 	
 	for (int i = 0; i < num_parameters; i++) {
-		config_parameters = &parameters[i];
+		config_parameters[i] = parameters + i;
 		config_values[i] = values[i];
 	}
 
@@ -58,15 +58,15 @@ configuration_t* create_config(tp_t* parameters, int* values, int num_parameters
 
 void add_config_to_search_space(configuration_t* config, search_space_t* search_space) {
 	if (search_space->size == search_space->maxSize) {
-		search_space->configurations = realloc(search_space->configurations, 2 * maxSize * sizeof(configuration_t*));
+		search_space->configurations = realloc(search_space->configurations, 2 * search_space->maxSize * sizeof(configuration_t*));
 		search_space->maxSize *= 2;
 	}
 	
-	search_space->configurations[size] = config;
+	search_space->configurations[search_space->size] = config;
 	search_space->size++;
 }
 
-bool process_value(tp_t* parameters, int* values, int num_parameters, int current_value, search_space_t* search_space) {
+bool process_value(tp_t* parameters, int* values, int num_parameters, int parameter_number, int current_value, search_space_t* search_space) {
 	values[parameter_number] = current_value;
 	
 	if (!check_constraint(values, parameter_number + 1, parameters[parameter_number].constraint))
