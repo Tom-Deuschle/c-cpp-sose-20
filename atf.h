@@ -19,13 +19,13 @@ typedef struct {
 typedef struct {
   tp_t** parameters;  // "size" pointers to tuning parameters
   int*   values;      // "size" values, one for each tuning parameter in "parameters"
-  int    size;        // numer of entries in "parameters" and "values"
+  int    size;        // number of entries in "parameters" and "values"
 } configuration_t;
 
 // Type for the search space, i.e. a collection of all valid configurations.
 typedef struct {
-  // Ergänzen Sie hier Ihre Lösung für Aufgabe 2
-
+  configuration_t** configurations; // "size" pointers to configurations
+  int maxSize; // current maximum size for configuration pointers; automically allocates more memory when the maxSize is reached
   int size;  // number of configurations in this search space
 } search_space_t;
 // Get configuration with "index" (index in [0..size-1]) from "search space".
