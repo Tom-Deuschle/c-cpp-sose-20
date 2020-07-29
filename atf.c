@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 void print_configuration(int* values, int num_values) {
   for (int i = 0; i < num_values; ++i) {
@@ -158,8 +159,43 @@ void free_search_space(search_space_t* search_space) {
   free(search_space->configurations);
 }
 
+int compute_costs(configuration_t* config, cost_function_t cost_function) {
+	int* values = config->values;
+	int num_values = config->size;
+	
+	int p0 = (num_values >= 1) ? values[0] : 0;
+	int p1 = (num_values >= 2) ? values[1] : 0;
+	int p2 = (num_values >= 3) ? values[2] : 0;
+	int p3 = (num_values >= 4) ? values[3] : 0;
+	int p4 = (num_values >= 5) ? values[4] : 0;
+	int p5 = (num_values >= 6) ? values[5] : 0;
+	int p6 = (num_values >= 7) ? values[6] : 0;
+	int p7 = (num_values >= 8) ? values[7] : 0;
+	int p8 = (num_values >= 9) ? values[8] : 0;
+	int p9 = (num_values >= 10) ? values[9] : 0;
+	
+	return cost_function(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
+}
+
 void explore_search_space(search_space_t* search_space, cost_function_t cost_function,
                           SEARCH_STRATEGY search_strategy, ABORT_TYPE abort_type, int abort_value,
                           configuration_t* best_config, int* cost) {
-  // Ergänzen Sie hier Ihre Lösung für Aufgabe 3
+	if (abort_type == EVALUATIONS) {
+		for (int i = 0; i < abort_value; i++) {
+			
+		}
+	}
+	else {
+		if (abort_type == MINUTES)
+			abort_value *= 60;
+		if (abort_type == HOURS)
+			abort_value *= 3600;
+		
+		time_t start_time = time(NULL);
+		time_t end_time = current_time + abort_value;
+		
+		do {
+			
+		} while (time(NULL) < end_time);
+	}
 }
