@@ -159,7 +159,7 @@ void free_search_space(search_space_t* search_space) {
   free(search_space->configurations);
 }
 
-int compute_costs(configuration_t* config, cost_function_t cost_function) {
+int compute_cost(configuration_t* config, cost_function_t cost_function) {
 	int* values = config->values;
 	int num_values = config->size;
 	
@@ -177,25 +177,53 @@ int compute_costs(configuration_t* config, cost_function_t cost_function) {
 	return cost_function(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 }
 
+void compare_configuration(search_space_t* search_space, cost_function_t cost_function,
+						   SEARCH_STRATEGY search_strategy, configuration_t* best_config,
+						   int* best_cost, int i) {
+	if (search_strategy == EXHAUSTIVE) {
+		configuration_t* config = search_space->configurations[i];
+		int cost = compute_cost(config, cost_function);
+		
+		if (i == 0 || cost < *best_cost) {
+			*best_config = *config;
+			*best_cost = cost;
+		}	
+	}
+	else {
+		srand(time(NULL));
+		int r = rand() % search_space->size;
+		
+		configuration_t* config = search_space->configurations[r];
+		int cost = compute_cost(config, cost_function);
+		
+		if (i == 0 || cost < *best_cost) {
+			*best_config = *config;
+			*best_cost = cost;
+		}	
+	}
+}
+
 void explore_search_space(search_space_t* search_space, cost_function_t cost_function,
                           SEARCH_STRATEGY search_strategy, ABORT_TYPE abort_type, int abort_value,
-                          configuration_t* best_config, int* cost) {
+                          configuration_t* best_config, int* cost) {	
 	if (abort_type == EVALUATIONS) {
 		for (int i = 0; i < abort_value; i++) {
-			
+			compare_configuration(search_space, cost_function, search_strategy, best_config, cost, i);
 		}
 	}
 	else {
+		int i = 0;
+		
 		if (abort_type == MINUTES)
 			abort_value *= 60;
 		if (abort_type == HOURS)
 			abort_value *= 3600;
-		
-		time_t start_time = time(NULL);
-		time_t end_time = current_time + abort_value;
+
+		time_t end_time = time(NULL) + abort_value;
 		
 		do {
-			
+			compare_configuration(search_space, cost_function, search_strategy, best_config, cost, i);
+			i++;
 		} while (time(NULL) < end_time);
 	}
 }
